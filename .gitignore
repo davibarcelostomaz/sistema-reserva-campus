@@ -1,0 +1,23 @@
+# Ambiente virtual
+venv/
+.venv/
+env/
+
+# Banco SQLite
+db.sqlite3
+db.sqlite3-journal
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+.idea/
+*.iml
+
+# Variáveis de ambiente
+.env
+
+# Sistema
+.DS_Store
+Thumbs.db
