@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Reserva Campus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 32px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1f2937;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .erro {
+            color: #dc2626;
+            font-size: 14px;
+        }
+
+        .rodape {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Criar conta</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for campo in form %}
+                <label for="{{ campo.id_for_label }}">
+                    {{ campo.label }}
+                </label>
+
+                {{ campo }}
+
+                {% for erro in campo.errors %}
+                    <p class="erro">{{ erro }}</p>
+                {% endfor %}
+
+                {% if campo.help_text %}
+                    <small>{{ campo.help_text }}</small>
+                {% endif %}
+            {% endfor %}
+
+            {% for erro in form.non_field_errors %}
+                <p class="erro">{{ erro }}</p>
+            {% endfor %}
+
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <div class="rodape">
+            Já possui uma conta?
+            <a href="{% url 'login' %}">Entrar</a>
+        </div>
+    </div>
+</body>
+</html>
