@@ -97,6 +97,20 @@
         .rodape {
             margin-top: 25px;
         }
+        .acoes {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .botao-excluir {
+            background: #6b7280;
+        }
+
+        .botao-excluir:hover {
+            background: #4b5563;
+        }
+
     </style>
 </head>
 
@@ -145,6 +159,23 @@
                     <strong>Localização:</strong>
                     {{ espaco.localizacao }}
                 </p>
+                {% if user.perfil == 'ADMINISTRADOR' %}
+
+                    <div class="acoes">
+
+                        <a href="{% url 'editar_espaco' espaco.id %}"
+                           class="botao">
+                            Editar
+                        </a>
+
+                        <a href="{% url 'excluir_espaco' espaco.id %}"
+                           class="botao botao-excluir">
+                            Excluir
+                        </a>
+
+                    </div>
+
+                {% endif %}
 
             </div>
 

@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluir Espaço - Reserva Campus</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+
+        .container {
+            background: white;
+            max-width: 550px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #dc2626;
+        }
+
+        p {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        .botoes {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .botao {
+            padding: 12px 20px;
+            background: #dc2626;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .botao:hover {
+            background: #b91c1c;
+        }
+
+        .secundario {
+            background: #6b7280;
+        }
+
+        .secundario:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Excluir espaço</h1>
+
+    <p>
+        Tem certeza de que deseja excluir o espaço
+        <strong>{{ espaco.nome }}</strong>?
+    </p>
+
+    <p>
+        Essa ação não poderá ser desfeita.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="botoes">
+            <button type="submit" class="botao">
+                Sim, excluir
+            </button>
+
+            <a href="{% url 'listar_espacos' %}"
+               class="botao secundario">
+                Cancelar
+            </a>
+        </div>
+    </form>
+
+</div>
+
+</body>
+</html>
