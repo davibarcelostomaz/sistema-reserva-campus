@@ -25,4 +25,10 @@ urlpatterns = [
     ),
 
     path('inicio/', views.inicio, name='inicio'),
+
+    path(
+        'teste-administrador/',
+        views.teste_administrador,
+        name='teste_administrador'
+    ),
 ]
