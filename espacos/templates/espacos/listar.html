@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espaços - Reserva Campus</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+
+        .container {
+            background: white;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cabecalho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            color: #1f2937;
+        }
+
+        .descricao {
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .grade {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+
+        .informacao {
+            color: #4b5563;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .botao {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #dc2626;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .botao:hover {
+            background: #b91c1c;
+        }
+
+        .vazio {
+            text-align: center;
+            color: #6b7280;
+            padding: 40px 10px;
+        }
+
+        .rodape {
+            margin-top: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="cabecalho">
+        <div>
+            <h1>Espaços disponíveis</h1>
+            <p class="descricao">
+                Confira os ambientes disponíveis no campus.
+            </p>
+        </div>
+
+        {% if user.perfil == 'ADMINISTRADOR' %}
+            <a href="{% url 'cadastrar_espaco' %}" class="botao">
+                + Cadastrar espaço
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="grade">
+
+        {% for espaco in espacos %}
+
+            <div class="card">
+
+                <h2>{{ espaco.nome }}</h2>
+
+                <p class="informacao">
+                    <strong>Tipo:</strong> {{ espaco.tipo }}
+                </p>
+
+                <p class="informacao">
+                    <strong>Capacidade:</strong>
+                    {{ espaco.capacidade }} pessoas
+                </p>
+
+                <p class="informacao">
+                    <strong>Recursos:</strong>
+                    {{ espaco.recursos|default:"Não informado" }}
+                </p>
+
+                <p class="informacao">
+                    <strong>Localização:</strong>
+                    {{ espaco.localizacao }}
+                </p>
+
+            </div>
+
+        {% empty %}
+
+            <div class="vazio">
+                <h2>Nenhum espaço cadastrado</h2>
+                <p>Os espaços cadastrados aparecerão aqui.</p>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="rodape">
+        <a href="{% url 'inicio' %}" class="botao">
+            Voltar ao início
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

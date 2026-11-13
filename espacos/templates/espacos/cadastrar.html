@@ -1,0 +1,172 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Espaço - Reserva Campus</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+
+        .container {
+            background: white;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #1f2937;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .descricao {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+        .campo label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .campo input,
+        .campo select,
+        .campo textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            background: #fff;
+        }
+
+        .campo input:focus,
+        .campo select:focus,
+        .campo textarea:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+        }
+
+        .campo textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .erro {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .botoes {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .botao {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #dc2626;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .botao:hover {
+            background: #b91c1c;
+        }
+
+        .botao-secundario {
+            background: #6b7280;
+        }
+
+        .botao-secundario:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Cadastrar novo espaço</h1>
+
+    <p class="descricao">
+        Preencha as informações abaixo para adicionar um novo ambiente ao campus.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {% for field in form %}
+
+            <div class="campo">
+
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+
+                {% for error in field.errors %}
+                    <p class="erro">{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+        {% endfor %}
+
+        {% for error in form.non_field_errors %}
+            <p class="erro">{{ error }}</p>
+        {% endfor %}
+
+        <div class="botoes">
+
+            <button type="submit" class="botao">
+                Cadastrar espaço
+            </button>
+
+            <a href="{% url 'listar_espacos' %}"
+               class="botao botao-secundario">
+                Voltar
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>
+```
