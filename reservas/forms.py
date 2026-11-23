@@ -69,7 +69,7 @@ class SolicitacaoReservaForm(forms.ModelForm):
                 hora_fim__gt=hora_inicio,
                 status__in=[
                     Reserva.Status.PENDENTE,
-                    Reserva.Status.CONFIRMADA,
+                    Reserva.Status.APROVADA,
                 ],
             )
 

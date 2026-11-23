@@ -37,30 +37,82 @@
         button:hover {
             background: #b91c1c;
         }
+
+        .botao-reservas {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .botao-reservas:hover {
+            background: #1d4ed8;
+        }
+
+        .botao-gerenciar {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #16a34a;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .botao-gerenciar:hover {
+            background: #15803d;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Bem-vindo ao Reserva Campus!</h1>
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div style="
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #d1fae5;
+            color: #065f46;
+        ">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <h1>Bem-vindo ao Reserva Campus!</h1>
 
-        <p>
-            Olá, <strong>{{ request.user.first_name }}</strong>!
-        </p>
+    <p>
+        Olá, <strong>{{ request.user.first_name }}</strong>!
+    </p>
 
-        <p>
-            Nome de usuário: {{ request.user.username }}
-        </p>
+    <p>
+        Nome de usuário: {{ request.user.username }}
+    </p>
 
-        <p>
-            Perfil: {{ request.user.get_perfil_display }}
-        </p>
+    <p>
+        Perfil: {{ request.user.get_perfil_display }}
+    </p>
 
-        <p>Você está autenticado no sistema.</p>
+    <p>Você está autenticado no sistema.</p>
 
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Sair</button>
-        </form>
-    </div>
+    <a href="{% url 'minhas_reservas' %}" class="botao-reservas">
+        Minhas reservas
+    </a>
+    {% if user.perfil == 'ADMINISTRADOR' %}
+        <a href="{% url 'reservas_pendentes' %}" class="botao-gerenciar">
+            Gerenciar reservas
+        </a>
+    {% endif %}
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Sair</button>
+    </form>
+</div>
 </body>
 </html>

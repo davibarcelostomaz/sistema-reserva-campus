@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas Pendentes - Reserva Campus</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .cabecalho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: #111827;
+        }
+
+        .subtitulo {
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .botao-voltar {
+            display: inline-block;
+            padding: 11px 18px;
+            background: #6b7280;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .botao-voltar:hover {
+            background: #4b5563;
+        }
+
+        .mensagem {
+            padding: 14px;
+            margin-bottom: 20px;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 7px;
+        }
+
+        .reserva {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .reserva-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .reserva h2 {
+            margin: 0;
+            color: #1f2937;
+        }
+
+        .status {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .informacoes {
+            line-height: 1.9;
+            color: #4b5563;
+            margin-bottom: 20px;
+        }
+
+        .informacoes strong {
+            color: #1f2937;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .botao {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .aprovar {
+            background: #16a34a;
+        }
+
+        .aprovar:hover {
+            background: #15803d;
+        }
+
+        .recusar {
+            background: #dc2626;
+        }
+
+        .recusar:hover {
+            background: #b91c1c;
+        }
+
+        .vazio {
+            background: white;
+            padding: 45px 20px;
+            text-align: center;
+            border-radius: 10px;
+            color: #6b7280;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .vazio h2 {
+            color: #374151;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 25px 12px;
+            }
+
+            .reserva {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="cabecalho">
+        <div>
+            <h1>Reservas pendentes</h1>
+            <p class="subtitulo">
+                Gerencie as solicitações de reserva dos usuários.
+            </p>
+        </div>
+
+        <a href="{% url 'inicio' %}" class="botao-voltar">
+            Voltar ao início
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mensagem">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if reservas %}
+        {% for reserva in reservas %}
+            <div class="reserva">
+
+                <div class="reserva-topo">
+                    <h2>{{ reserva.espaco.nome }}</h2>
+
+                    <span class="status">
+                        Pendente
+                    </span>
+                </div>
+
+                <div class="informacoes">
+                    <strong>Solicitante:</strong>
+                    {{ reserva.usuario.username }}<br>
+
+                    <strong>Perfil:</strong>
+                    {{ reserva.usuario.get_perfil_display }}<br>
+
+                    <strong>Tipo de espaço:</strong>
+                    {{ reserva.espaco.tipo }}<br>
+
+                    <strong>Localização:</strong>
+                    {{ reserva.espaco.localizacao }}<br>
+
+                    <strong>Data:</strong>
+                    {{ reserva.data|date:"d/m/Y" }}<br>
+
+                    <strong>Horário:</strong>
+                    {{ reserva.hora_inicio|time:"H:i" }} às
+                    {{ reserva.hora_fim|time:"H:i" }}
+                </div>
+
+                <div class="acoes">
+
+                    <form method="POST" action="{% url 'aprovar_reserva' reserva.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="botao aprovar">
+                            Aprovar reserva
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{% url 'recusar_reserva' reserva.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="botao recusar">
+                            Recusar reserva
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="vazio">
+            <h2>Nenhuma reserva pendente!</h2>
+            <p>Todas as solicitações foram analisadas.</p>
+        </div>
+    {% endif %}
+
+</div>
+</body>
+</html>

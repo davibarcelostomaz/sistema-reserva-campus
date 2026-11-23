@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('data', models.DateField()),
                 ('hora_inicio', models.TimeField()),
                 ('hora_fim', models.TimeField()),
-                ('status', models.CharField(choices=[('CONFIRMADA', 'Confirmada'), ('PENDENTE', 'Pendente'), ('CANCELADA', 'Cancelada')], default='PENDENTE', max_length=20)),
+                ('status', models.CharField(choices=[('APROVADA', 'Aprovada'), ('PENDENTE', 'Pendente'), ('CANCELADA', 'Cancelada')], default='PENDENTE', max_length=20)),
                 ('espaco', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservas', to='espacos.espaco')),
                 ('usuario', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservas', to=settings.AUTH_USER_MODEL)),
             ],

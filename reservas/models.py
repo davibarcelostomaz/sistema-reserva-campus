@@ -6,8 +6,9 @@ class Reserva(models.Model):
     """Reserva de um espaço no campus por um usuário em um período determinado."""
 
     class Status(models.TextChoices):
-        CONFIRMADA = 'CONFIRMADA', 'Confirmada'
+        APROVADA = 'APROVADA', 'APROVADA'
         PENDENTE = 'PENDENTE', 'Pendente'
+        RECUSADA = 'RECUSADA', 'Recusada'
         CANCELADA = 'CANCELADA', 'Cancelada'
 
     usuario = models.ForeignKey(

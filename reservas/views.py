@@ -5,6 +5,7 @@ from django.urls import NoReverseMatch, reverse
 
 from .forms import SolicitacaoReservaForm
 from .models import Reserva
+from usuarios.views import perfis_permitidos
 
 
 def _pagina_de_volta():
@@ -17,7 +18,7 @@ def _pagina_de_volta():
 
 @login_required
 def cancelar_reserva(request, id):
-    """SCRUM-35: o próprio usuário cancela uma reserva pendente ou confirmada."""
+    """SCRUM-35: o próprio usuário cancela uma reserva pendente ou aprovada."""
     reserva = get_object_or_404(Reserva, id=id, usuario=request.user)
 
     if reserva.status == Reserva.Status.CANCELADA:
@@ -67,3 +68,68 @@ def solicitar_reserva(request):
         'reservas/solicitar.html',
         {'form': form}
     )
+
+
+@login_required
+def minhas_reservas(request):
+    reservas = Reserva.objects.filter(
+        usuario=request.user
+    ).select_related('espaco')
+
+    return render(
+        request,
+        'reservas/minhas_reservas.html',
+        {'reservas': reservas}
+    )
+
+
+@login_required
+@perfis_permitidos('ADMINISTRADOR')
+def reservas_pendentes(request):
+    reservas = Reserva.objects.filter(
+        status=Reserva.Status.PENDENTE
+    ).select_related('usuario', 'espaco').order_by('data', 'hora_inicio')
+
+    return render(
+        request,
+        'reservas/pendentes.html',
+        {'reservas': reservas}
+    )
+
+
+@login_required
+@perfis_permitidos('ADMINISTRADOR')
+def aprovar_reserva(request, id):
+    if request.method != 'POST':
+        return redirect('reservas_pendentes')
+
+    reserva = get_object_or_404(
+        Reserva,
+        id=id,
+        status=Reserva.Status.PENDENTE
+    )
+
+    reserva.status = Reserva.Status.APROVADA
+    reserva.save()
+
+    messages.success(request, 'Reserva aprovada com sucesso!')
+    return redirect('reservas_pendentes')
+
+
+@login_required
+@perfis_permitidos('ADMINISTRADOR')
+def recusar_reserva(request, id):
+    if request.method != 'POST':
+        return redirect('reservas_pendentes')
+
+    reserva = get_object_or_404(
+        Reserva,
+        id=id,
+        status=Reserva.Status.PENDENTE
+    )
+
+    reserva.status = Reserva.Status.RECUSADA
+    reserva.save()
+
+    messages.success(request, 'Reserva recusada com sucesso!')
+    return redirect('reservas_pendentes')
