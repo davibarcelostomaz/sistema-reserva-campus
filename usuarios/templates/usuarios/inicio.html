@@ -103,6 +103,12 @@
     <a href="{% url 'minhas_reservas' %}" class="botao-reservas">
         Minhas reservas
     </a>
+    <a href="{% url 'solicitar_reserva' %}" class="botao-reservas">
+        Solicitar reserva
+    </a>
+    <a href="{% url 'listar_espacos' %}" class="botao-reservas">
+        {% if user.perfil == 'ADMINISTRADOR' %}Gerenciar espaços{% else %}Ver espaços{% endif %}
+    </a>
     {% if user.perfil == 'ADMINISTRADOR' %}
         <a href="{% url 'reservas_pendentes' %}" class="botao-gerenciar">
             Gerenciar reservas
