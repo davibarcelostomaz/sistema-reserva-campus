@@ -3,39 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cancelar reserva - Reserva Campus</title>
+    <title>Cancelar Reserva - Reserva Campus</title>
+
     <style>
-        body { font-family: Arial, sans-serif; background: #f3f4f6; margin: 0; padding: 40px 20px; color: #1f2937; }
-        .container { background: white; max-width: 520px; margin: 0 auto; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
-        h1 { margin: 0 0 10px; }
-        .descricao { color: #6b7280; margin: 0 0 20px; }
-        .dados { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; }
-        .dados p { margin: 6px 0; }
-        .acoes { display: flex; gap: 12px; flex-wrap: wrap; }
-        .botao-cancelar { background: #dc2626; color: white; border: 0; padding: 10px 20px; border-radius: 6px; font-size: 15px; cursor: pointer; }
-        .botao-cancelar:hover { background: #b91c1c; }
-        .botao-voltar { display: inline-block; padding: 10px 20px; border-radius: 6px; border: 1px solid #d1d5db; color: #1f2937; text-decoration: none; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+
+        .container {
+            background: white;
+            max-width: 550px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #dc2626;
+        }
+
+        p {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .informacao {
+            margin: 8px 0;
+        }
+
+        .botoes {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .botao {
+            padding: 12px 20px;
+            background: #dc2626;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .botao:hover {
+            background: #b91c1c;
+        }
+
+        .secundario {
+            background: #6b7280;
+        }
+
+        .secundario:hover {
+            background: #4b5563;
+        }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Cancelar reserva</h1>
-        <p class="descricao">Tem certeza que deseja cancelar esta reserva?</p>
 
-        <div class="dados">
-            <p><strong>Espaço:</strong> {{ reserva.espaco }}</p>
-            <p><strong>Data:</strong> {{ reserva.data|date:"d/m/Y" }}</p>
-            <p><strong>Horário:</strong> {{ reserva.hora_inicio|time:"H:i" }} às {{ reserva.hora_fim|time:"H:i" }}</p>
-            <p><strong>Situação atual:</strong> {{ reserva.get_status_display }}</p>
-        </div>
+<div class="container">
 
-        <div class="acoes">
-            <form method="post">
-                {% csrf_token %}
-                <button type="submit" class="botao-cancelar">Sim, cancelar reserva</button>
-            </form>
-            <a href="{% url 'inicio' %}" class="botao-voltar">Voltar</a>
-        </div>
+    <h1>Cancelar reserva</h1>
+
+    <p>
+        Tem certeza de que deseja cancelar a sua reserva do espaço
+        <strong>{{ reserva.espaco.nome }}</strong>?
+    </p>
+
+    <div class="card">
+        <p class="informacao">
+            <strong>Data:</strong> {{ reserva.data|date:"d/m/Y" }}
+        </p>
+
+        <p class="informacao">
+            <strong>Horário:</strong>
+            {{ reserva.hora_inicio|time:"H:i" }} às {{ reserva.hora_fim|time:"H:i" }}
+        </p>
+
+        <p class="informacao">
+            <strong>Situação atual:</strong> {{ reserva.get_status_display }}
+        </p>
     </div>
+
+    <p>
+        A reserva continuará no seu histórico com a situação "Cancelada".
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="botoes">
+            <button type="submit" class="botao">
+                Sim, cancelar
+            </button>
+
+            <a href="{% url 'inicio' %}"
+               class="botao secundario">
+                Voltar
+            </a>
+        </div>
+    </form>
+
+</div>
+
 </body>
 </html>
