@@ -1,5 +1,12 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+
+
+class UsuarioManager(UserManager):
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
+        # Superusuário criado via "createsuperuser" já entra como administrador.
+        extra_fields.setdefault('perfil', 'ADMINISTRADOR')
+        return super().create_superuser(username, email, password, **extra_fields)
 
 
 class Usuario(AbstractUser):
@@ -15,6 +22,8 @@ class Usuario(AbstractUser):
         choices=Perfil.choices,
         default=Perfil.ALUNO,
     )
+
+    objects = UsuarioManager()
 
     class Meta:
         verbose_name = 'Usuário'

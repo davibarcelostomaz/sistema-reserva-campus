@@ -25,6 +25,13 @@ def cancelar_reserva(request, id):
         messages.info(request, 'Esta reserva já estava cancelada.')
         return redirect(_pagina_de_volta())
 
+    if reserva.status not in (Reserva.Status.PENDENTE, Reserva.Status.APROVADA):
+        messages.error(
+            request,
+            'Somente reservas pendentes ou aprovadas podem ser canceladas.'
+        )
+        return redirect(_pagina_de_volta())
+
     if request.method == 'POST':
         reserva.status = Reserva.Status.CANCELADA
         reserva.save()

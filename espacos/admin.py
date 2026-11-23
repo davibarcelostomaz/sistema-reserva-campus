@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Espaco
+
+
+@admin.register(Espaco)
+class EspacoAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'tipo', 'capacidade', 'localizacao']
+    search_fields = ['nome', 'tipo', 'localizacao']
