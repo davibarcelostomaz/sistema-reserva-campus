@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import NoReverseMatch, reverse
 
+from .forms import SolicitacaoReservaForm
 from .models import Reserva
 
 
@@ -30,3 +31,39 @@ def cancelar_reserva(request, id):
         return redirect(_pagina_de_volta())
 
     return render(request, 'reservas/cancelar.html', {'reserva': reserva})
+
+
+@login_required
+def solicitar_reserva(request):
+    """SCRUM-30: permite que um usuário autenticado solicite uma reserva."""
+
+    if request.method == 'POST':
+        form = SolicitacaoReservaForm(request.POST)
+
+        if form.is_valid():
+            reserva = form.save(commit=False)
+
+            # Associa a reserva ao usuário autenticado.
+            reserva.usuario = request.user
+
+            # O status inicial é PENDENTE.
+            # O signal do SCRUM-32 confirma automaticamente professores.
+            reserva.status = Reserva.Status.PENDENTE
+
+            reserva.save()
+
+            messages.success(
+                request,
+                'Solicitação de reserva realizada com sucesso!'
+            )
+
+            return redirect('inicio')
+
+    else:
+        form = SolicitacaoReservaForm()
+
+    return render(
+        request,
+        'reservas/solicitar.html',
+        {'form': form}
+    )
