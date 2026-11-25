@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import NoReverseMatch, reverse
 
+from datetime import date, timedelta
+from espacos.models import Espaco
+
 from .forms import SolicitacaoReservaForm
 from .models import Reserva
 from usuarios.views import perfis_permitidos
@@ -140,3 +143,49 @@ def recusar_reserva(request, id):
 
     messages.success(request, 'Reserva recusada com sucesso!')
     return redirect('reservas_pendentes')
+
+
+@login_required
+def reservas_do_espaco(request, espaco_id):
+    espaco = get_object_or_404(Espaco, id=espaco_id)
+
+    # Identifica a data de referência
+    data_referencia = request.GET.get('semana')
+
+    if data_referencia:
+        try:
+            data_referencia = date.fromisoformat(data_referencia)
+        except ValueError:
+            data_referencia = date.today()
+    else:
+        data_referencia = date.today()
+
+    # Descobre o início e o fim da semana
+    inicio_semana = data_referencia - timedelta(
+        days=data_referencia.weekday()
+    )
+
+    fim_semana = inicio_semana + timedelta(days=6)
+
+    # Busca as reservas daquele espaço na semana
+    reservas = Reserva.objects.filter(
+        espaco=espaco,
+        data__range=[inicio_semana, fim_semana],
+        status__in=[
+            Reserva.Status.PENDENTE,
+            Reserva.Status.APROVADA
+        ]
+    ).select_related('usuario').order_by('data', 'hora_inicio')
+
+    # Calcula as semanas anterior e próxima
+    semana_anterior = inicio_semana - timedelta(days=7)
+    proxima_semana = inicio_semana + timedelta(days=7)
+
+    return render(request, 'reservas/semana_espaco.html', {
+        'espaco': espaco,
+        'reservas': reservas,
+        'inicio_semana': inicio_semana,
+        'fim_semana': fim_semana,
+        'semana_anterior': semana_anterior,
+        'proxima_semana': proxima_semana,
+    })
